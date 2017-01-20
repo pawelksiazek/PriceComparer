@@ -1,0 +1,41 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using Infrastructure.AmazonDAL.Repositories;
+using PriceComparer.BusinessLayer.Interfaces;
+using PriceComparer.BusinessLayer.Models;
+
+namespace PriceComparer.BusinessLayer.Settings
+{
+    public class ComparerSettingsProvider<T> : IComparerSettingsProvider<T> where T : Product
+    {
+        private static ComparerSettingsProvider<T> _instance;
+        public static ComparerSettingsProvider<T> Instance => _instance ?? (_instance = new ComparerSettingsProvider<T>());
+
+        private ComparerSettingsProvider()
+        {
+            GetAvailableCategories();
+            SetDefaultComparerSettings();
+        }
+
+        public ComparerSettings<T> ComparerSettings { get; set; }
+
+        public Dictionary<int, string> AvailableCategories { get; set; }
+
+        private void GetAvailableCategories()
+        {
+            AvailableCategories = new Dictionary<int, string>
+            {
+                {0, "Książki" }
+            };
+        }
+
+        public void SetDefaultComparerSettings()
+        {
+            ComparerSettings = new ComparerSettings<T>
+            {
+                SelectedCategoryId = AvailableCategories.Select(x => x.Key).First(),
+                AvailableShops = new List<Shop<T>>{ new Shop<T>("Amazon", new AmazonRepository<T>()) }
+            };
+        }
+    }
+}

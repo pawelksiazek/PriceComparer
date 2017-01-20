@@ -62,8 +62,8 @@
                                         <ColumnDefinition Width="5"/>
                                         <ColumnDefinition Width="100"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding ProductNameToSearch, TargetNullValue={x:Static sys:String.Empty}}"/>
-                                    <Button x:Name="SearchProductButton" Grid.Row="0" Grid.Column="2" Content="Szukaj" Command="{Binding SearchProductCommand}"/>
+                                    <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding ProductNameToSearch, TargetNullValue={x:Static sys:String.Empty}, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Button x:Name="SearchProductButton" Grid.Row="0" Grid.Column="2" Content="Szukaj" IsEnabled="{Binding IsProductNameProvided}" Command="{Binding SearchProductByNameCommand}"/>
                                 </Grid>
                             </Grid>
 
@@ -76,8 +76,7 @@
                                         <TextBlock Text="{Binding Title}"/>
                                         <TextBlock Text=" (" />
                                         <TextBlock Text="{Binding Author}"/>
-                                        <TextBlock Text=") $" />
-                                        <TextBlock Text="{Binding Price}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" />
+                                        <TextBlock Text=")" />
                                     </WrapPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

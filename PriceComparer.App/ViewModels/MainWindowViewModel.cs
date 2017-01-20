@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Windows.Input;
 using PriceComparer.App.Commands;
+using PriceComparer.BusinessLayer.Interfaces;
 using PriceComparer.BusinessLayer.Models;
+using PriceComparer.BusinessLayer.Providers;
+using PriceComparer.BusinessLayer.Settings;
 
 namespace PriceComparer.App.ViewModels
 {
@@ -15,57 +18,55 @@ namespace PriceComparer.App.ViewModels
 
         #endregion
 
+        private readonly IComparerSettingsProvider<Book> _comparerSettingsProvider;
+        private readonly ISearchProvider _searchProvider;
+
         public MainWindowViewModel()
         {
-            GetAvailableCategories();
+            _comparerSettingsProvider = ComparerSettingsProvider<Book>.Instance;
+            _searchProvider = new SearchProvider();
         }
 
+        public Dictionary<int, string> AvailableCategories => _comparerSettingsProvider.AvailableCategories;
 
-        #region Categories
-
-        private void GetAvailableCategories()
+        public int SelectedCategoryId
         {
-            AvailableCategories = new Dictionary<int, string>
-            {
-                {0, "Książki" }
-            };
-
-            SelectedCategoryId = AvailableCategories.Select(x => x.Key).First();
+            get { return _comparerSettingsProvider.ComparerSettings.SelectedCategoryId; }
+            set { _comparerSettingsProvider.ComparerSettings.SelectedCategoryId = value; }
         }
 
-        public Dictionary<int, string> AvailableCategories { get; set; }
+        private string _productNameToSearch;
+        public string ProductNameToSearch
+        {
+            get { return _productNameToSearch; }
+            set
+            {
+                _productNameToSearch = value;
+                OnPropertyChanged(nameof(IsProductNameProvided));
+            }
+        }
 
-        #endregion
+        public bool IsProductNameProvided => ProductNameToSearch != null;
 
+        #region SearchProductByNameCommand
 
-        public int SelectedCategoryId { get; set; }
-
-        public string ProductNameToSearch { get; set; }
-
-
-        #region SearchProductCommand
-
-        private ICommand _searchProductCommand;
-        public ICommand SearchProductCommand
+        private ICommand _searchProductByNameCommand;
+        public ICommand SearchProductByNameCommand
         {
             get
             {
-                return _searchProductCommand ?? (_searchProductCommand = new CommandHandler(() => SearchProduct(), _canExecuteSearchProductCommand));
+                return _searchProductByNameCommand ?? (_searchProductByNameCommand = new CommandHandler(() => SearchProductByName(), _canExecuteSearchProductCommand));
             }
         }
         private bool _canExecuteSearchProductCommand = true;
 
-        public void SearchProduct() => ProductsFound = new List<Book>
-        {
-            new Book {Isbn = 111, Title = "Book1", Author = "Author1", Price = 10},
-            new Book {Isbn = 222, Title = "Book2", Author = "Author2", Price = 20},
-            new Book {Isbn = 333, Title = "Book3", Author = "Author3", Price = 30}
-        };
+        public void SearchProductByName() => ProductsFound = _searchProvider.SearchItemsByName(ProductNameToSearch);
 
         #endregion
 
 
         private List<Book> _productsFound;
+
         public List<Book> ProductsFound
         {
             get { return _productsFound; }
