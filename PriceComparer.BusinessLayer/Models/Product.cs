@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PriceComparer.BusinessLayer
+namespace PriceComparer.BusinessLayer.Models
 {
-    public class Class1
+    public class Product
     {
+        public decimal Price { get; set; }
     }
 }

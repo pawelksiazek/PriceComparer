@@ -4,9 +4,93 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PriceComparer.App"
+        xmlns:viewModels="clr-namespace:PriceComparer.App.ViewModels"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="Porównywarka cen" Height="350" Width="525" MinHeight="350" MinWidth="525"
+        WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" FontSize="16" FontWeight="Bold" Text="{Binding HeaderTitle}"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" FontSize="12" Text="{Binding HeaderDescription}"/>
+            </Grid>
+            <Separator/>
+        </StackPanel>
+
+        <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto">
+            <Grid Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <GroupBox Grid.Row="0" Grid.Column="0" Header="Wyszukiwanie" Padding="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Grid.Column="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+
+                                <ComboBox ItemsSource="{Binding AvailableCategories}" SelectedValue="{Binding SelectedCategoryId}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
+
+                                <Grid Grid.Row="0" Grid.Column="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding ProductNameToSearch, TargetNullValue={x:Static sys:String.Empty}}"/>
+                                    <Button x:Name="SearchProductButton" Grid.Row="0" Grid.Column="2" Content="Szukaj" Command="{Binding SearchProductCommand}"/>
+                                </Grid>
+                            </Grid>
+
+                        </Grid>
+
+                        <ListView Grid.Row="2" Grid.Column="0" ItemsSource="{Binding ProductsFound}" SelectedItem="{Binding SelectedProduct}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding Title}"/>
+                                        <TextBlock Text=" (" />
+                                        <TextBlock Text="{Binding Author}"/>
+                                        <TextBlock Text=") $" />
+                                        <TextBlock Text="{Binding Price}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" />
+                                    </WrapPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </GroupBox>
+
+
+
+            </Grid>
+        </ScrollViewer>
+
+    </DockPanel>
+
+
 </Window>
