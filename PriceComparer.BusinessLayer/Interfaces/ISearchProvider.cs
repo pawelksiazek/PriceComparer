@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PriceComparer.BusinessLayer.Models;
+﻿using System.Collections.Generic;
+using Common.DTO.BusinessModels;
 
 namespace PriceComparer.BusinessLayer.Interfaces
 {

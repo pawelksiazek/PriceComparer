@@ -6,25 +6,22 @@ using System.Web;
 
 namespace Infrastructure.AmazonDAL.Services
 {
-    /// <summary>
-    /// 
-    /// </summary>
     class SignedRequestProvider
     {
-        private string endPoint;
-        private string akid;
-        private byte[] secret;
-        private HMAC signer;
+        private readonly string _endPoint;
+        private readonly string _akid;
+        private readonly byte[] _secret;
+        private readonly HMAC _signer;
 
-        private const string REQUEST_URI = "/onca/xml";
-        private const string REQUEST_METHOD = "GET";
+        private const string RequestUri = "/onca/xml";
+        private const string RequestMethod = "GET";
 
         public SignedRequestProvider(string awsAccessKeyId, string awsSecretKey, string destination)
         {
-            this.endPoint = destination.ToLower();
-            this.akid = awsAccessKeyId;
-            this.secret = Encoding.UTF8.GetBytes(awsSecretKey);
-            this.signer = new HMACSHA256(this.secret);
+            _endPoint = destination.ToLower();
+            _akid = awsAccessKeyId;
+            _secret = Encoding.UTF8.GetBytes(awsSecretKey);
+            _signer = new HMACSHA256(_secret);
         }
 
         /// <summary>
@@ -41,19 +38,19 @@ namespace Infrastructure.AmazonDAL.Services
             SortedDictionary<string, string> sortedMap = new SortedDictionary<string, string>(request, pc);
 
             // Add the AWSAccessKeyId and Timestamp to the requests.
-            sortedMap["AWSAccessKeyId"] = this.akid;
-            sortedMap["Timestamp"] = this.GetTimestamp();
+            sortedMap["AWSAccessKeyId"] = _akid;
+            sortedMap["Timestamp"] = GetTimestamp();
 
             // Get the canonical query string
-            string canonicalQS = this.ConstructCanonicalQueryString(sortedMap);
+            string canonicalQS = ConstructCanonicalQueryString(sortedMap);
 
             // Derive the bytes needs to be signed.
             StringBuilder builder = new StringBuilder();
-            builder.Append(REQUEST_METHOD)
+            builder.Append(RequestMethod)
                 .Append("\n")
-                .Append(this.endPoint)
+                .Append(_endPoint)
                 .Append("\n")
-                .Append(REQUEST_URI)
+                .Append(RequestUri)
                 .Append("\n")
                 .Append(canonicalQS);
 
@@ -61,18 +58,18 @@ namespace Infrastructure.AmazonDAL.Services
             byte[] toSign = Encoding.UTF8.GetBytes(stringToSign);
 
             // Compute the signature and convert to Base64.
-            byte[] sigBytes = signer.ComputeHash(toSign);
+            byte[] sigBytes = _signer.ComputeHash(toSign);
             string signature = Convert.ToBase64String(sigBytes);
 
             // now construct the complete URL and return to caller.
             StringBuilder qsBuilder = new StringBuilder();
             qsBuilder.Append("http://")
-                .Append(this.endPoint)
-                .Append(REQUEST_URI)
+                .Append(_endPoint)
+                .Append(RequestUri)
                 .Append("?")
                 .Append(canonicalQS)
                 .Append("&Signature=")
-                .Append(this.PercentEncodeRfc3986(signature));
+                .Append(PercentEncodeRfc3986(signature));
 
             return qsBuilder.ToString();
         }
@@ -129,9 +126,9 @@ namespace Infrastructure.AmazonDAL.Services
 
             foreach (KeyValuePair<string, string> kvp in sortedParamMap)
             {
-                builder.Append(this.PercentEncodeRfc3986(kvp.Key));
+                builder.Append(PercentEncodeRfc3986(kvp.Key));
                 builder.Append("=");
-                builder.Append(this.PercentEncodeRfc3986(kvp.Value));
+                builder.Append(PercentEncodeRfc3986(kvp.Value));
                 builder.Append("&");
             }
             string canonicalString = builder.ToString();

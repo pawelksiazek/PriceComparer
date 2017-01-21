@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Common.DTO.BusinessModels;
 using PriceComparer.BusinessLayer.Interfaces;
-using PriceComparer.BusinessLayer.Models;
 
 namespace PriceComparer.BusinessLayer.Comparers
 {
-    public class ItemsComparer : IItemsComparer
+    public class ItemsComparer<T> : IItemsComparer<T> where T : Item<T>
     {
-        public Product GetCheapestItem(List<Product> items)
+        public T GetCheapestItem(List<T> items)
         {
-            var cheapestProduct = items.First();
+            var cheapestItem = items.First();
 
             foreach (var product in items)
             {
-                if (product.Price < cheapestProduct.Price)
+                if (product.Price < cheapestItem.Price)
                 {
-                    cheapestProduct = product;
+                    cheapestItem = product;
                 }
             }
-            return cheapestProduct;
+            return cheapestItem;
         }
     }
 }

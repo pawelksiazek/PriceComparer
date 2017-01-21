@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using Common.DTO.BusinessModels;
 using PriceComparer.App.Commands;
 using PriceComparer.BusinessLayer.Comparers;
 using PriceComparer.BusinessLayer.Interfaces;
@@ -22,13 +23,13 @@ namespace PriceComparer.App.ViewModels
 
         private readonly IComparerSettingsProvider<Book> _comparerSettingsProvider;
         private readonly ISearchProvider _searchProvider;
-        private readonly IItemsComparer _itemsComparer;
+        private readonly IItemsComparer<Book> _itemsComparer;
 
         public MainWindowViewModel()
         {
             _comparerSettingsProvider = ComparerSettingsProvider<Book>.Instance;
             _searchProvider = new SearchProvider();
-            _itemsComparer = new ItemsComparer();
+            _itemsComparer = new ItemsComparer<Book>();
 
             GetAvailableShops();
         }
@@ -64,6 +65,7 @@ namespace PriceComparer.App.ViewModels
         public bool IsProductNameProvided => ProductNameToSearch != null;
 
         public ObservableCollection<Shop<Book>> AvailableShops { get; set; }
+
 
         #region SearchItemByNameCommand
 
@@ -105,7 +107,7 @@ namespace PriceComparer.App.ViewModels
                 ItemsFoundById = _searchProvider.GetItemsById(_selectedItem.Isbn);
                 if (ItemsFoundById.Count > 1)
                 {
-                    BestBuyItem = (Book)_itemsComparer.GetCheapestItem(new List<Product>(ItemsFoundById));
+                    BestBuyItem = _itemsComparer.GetCheapestItem(ItemsFoundById);
                 }
                 else
                 {

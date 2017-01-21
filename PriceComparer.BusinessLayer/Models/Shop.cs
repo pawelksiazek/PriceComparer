@@ -1,8 +1,9 @@
-﻿using Infrastructure.Common.Interfaces;
+﻿using Common.DTO.BusinessModels;
+using Infrastructure.Common.Interfaces;
 
 namespace PriceComparer.BusinessLayer.Models
 {
-    public class Shop<T> where T : Product
+    public class Shop<T> where T : Item<T>
     {
         public Shop(string name, IItemsRepository<T> itemsRepository)
         {

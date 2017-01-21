@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using Common.DTO.BusinessModels;
 using PriceComparer.BusinessLayer.Interfaces;
-using PriceComparer.BusinessLayer.Models;
 using PriceComparer.BusinessLayer.Settings;
 
 namespace PriceComparer.BusinessLayer.Providers

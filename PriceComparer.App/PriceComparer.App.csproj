@@ -99,6 +99,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.DTO\Common.DTO.csproj">
+      <Project>{e526aa3b-1950-4bf1-907c-9af36ff9b4b6}</Project>
+      <Name>Common.DTO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PriceComparer.BusinessLayer\PriceComparer.BusinessLayer.csproj">
       <Project>{1dcfd550-09ca-4223-bdf6-53e8bd2c2128}</Project>
       <Name>PriceComparer.BusinessLayer</Name>

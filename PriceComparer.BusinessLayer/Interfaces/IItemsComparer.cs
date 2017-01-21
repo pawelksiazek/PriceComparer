@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using PriceComparer.BusinessLayer.Models;
 
 namespace PriceComparer.BusinessLayer.Interfaces
 {
-    public interface IItemsComparer
+    public interface IItemsComparer<T>
     {
-        Product GetCheapestItem(List<Product> items);
+        T GetCheapestItem(List<T> items);
     }
 }

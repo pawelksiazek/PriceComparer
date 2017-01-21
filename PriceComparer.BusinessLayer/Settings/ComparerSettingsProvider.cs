@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Common.DTO.BusinessModels;
 using Infrastructure.AmazonDAL.Repositories;
 using PriceComparer.BusinessLayer.Interfaces;
 using PriceComparer.BusinessLayer.Models;
 
 namespace PriceComparer.BusinessLayer.Settings
 {
-    public class ComparerSettingsProvider<T> : IComparerSettingsProvider<T> where T : Product
+    public class ComparerSettingsProvider<T> : IComparerSettingsProvider<T> where T : Item<T>
     {
         private static ComparerSettingsProvider<T> _instance;
         public static ComparerSettingsProvider<T> Instance => _instance ?? (_instance = new ComparerSettingsProvider<T>());

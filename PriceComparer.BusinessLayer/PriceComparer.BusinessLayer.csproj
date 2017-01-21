@@ -44,9 +44,6 @@
     <Compile Include="Interfaces\IComparerSettingsProvider.cs" />
     <Compile Include="Interfaces\IItemsComparer.cs" />
     <Compile Include="Interfaces\ISearchProvider.cs" />
-    <Compile Include="Managers\ProductsManager.cs" />
-    <Compile Include="Models\Book.cs" />
-    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Shop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\SearchProvider.cs" />
@@ -54,9 +51,17 @@
     <Compile Include="Settings\ComparerSettingsProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.DTO\Common.DTO.csproj">
+      <Project>{e526aa3b-1950-4bf1-907c-9af36ff9b4b6}</Project>
+      <Name>Common.DTO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure.AmazonDAL\Infrastructure.AmazonDAL.csproj">
       <Project>{84cfc112-2780-45dd-9d50-d335eadcfc2d}</Project>
       <Name>Infrastructure.AmazonDAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.ApressDAL\Infrastructure.ApressDAL.csproj">
+      <Project>{38bb17a9-1146-4fe0-ac15-d249bc8d70ca}</Project>
+      <Name>Infrastructure.ApressDAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure.Common\Infrastructure.Common.csproj">
       <Project>{14c9f41a-3555-42a9-ab82-23bd82d219f2}</Project>
