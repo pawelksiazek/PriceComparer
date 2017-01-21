@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Common.Models
 {
-    public class DtoBase
+    public class ItemDto
     {
+        public decimal Price { get; set; }
+        public string Url { get; set; }
     }
 }

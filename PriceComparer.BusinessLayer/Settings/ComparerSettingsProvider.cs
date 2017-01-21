@@ -34,7 +34,11 @@ namespace PriceComparer.BusinessLayer.Settings
             ComparerSettings = new ComparerSettings<T>
             {
                 SelectedCategoryId = AvailableCategories.Select(x => x.Key).First(),
-                AvailableShops = new List<Shop<T>>{ new Shop<T>("Amazon", new AmazonRepository<T>()) }
+                AvailableShops = new List<Shop<T>>
+                {
+                    new Shop<T>("Amazon", new AmazonRepository<T>()),
+                    new Shop<T>("Apress", new AmazonRepository<T>()),
+                }
             };
         }
     }

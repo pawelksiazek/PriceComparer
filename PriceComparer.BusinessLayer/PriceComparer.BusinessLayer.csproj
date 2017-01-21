@@ -40,9 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comparers\ProductComparer.cs" />
+    <Compile Include="Comparers\ItemsComparer.cs" />
     <Compile Include="Interfaces\IComparerSettingsProvider.cs" />
-    <Compile Include="Interfaces\IProductComparer.cs" />
+    <Compile Include="Interfaces\IItemsComparer.cs" />
     <Compile Include="Interfaces\ISearchProvider.cs" />
     <Compile Include="Managers\ProductsManager.cs" />
     <Compile Include="Models\Book.cs" />

@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:PriceComparer.App.ViewModels"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Porównywarka cen" Height="350" Width="525" MinHeight="350" MinWidth="525"
+        Title="Porównywarka cen" Height="450" Width="525" MinHeight="450" MinWidth="525"
         WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <viewModels:MainWindowViewModel/>
@@ -35,11 +35,14 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <GroupBox Grid.Row="0" Grid.Column="0" Header="Wyszukiwanie" Padding="10">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="10"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="10"/>
                             <RowDefinition Height="100"/>
@@ -49,7 +52,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="5"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
@@ -63,13 +66,37 @@
                                         <ColumnDefinition Width="100"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding ProductNameToSearch, TargetNullValue={x:Static sys:String.Empty}, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Button x:Name="SearchProductButton" Grid.Row="0" Grid.Column="2" Content="Szukaj" IsEnabled="{Binding IsProductNameProvided}" Command="{Binding SearchProductByNameCommand}"/>
+                                    <Button x:Name="SearchProductButton" Grid.Row="0" Grid.Column="2" Content="Szukaj" IsEnabled="{Binding IsProductNameProvided}" Command="{Binding SearchItemByNameCommand}"/>
                                 </Grid>
                             </Grid>
 
                         </Grid>
 
-                        <ListView Grid.Row="2" Grid.Column="0" ItemsSource="{Binding ProductsFound}" SelectedItem="{Binding SelectedProduct}">
+                        <Grid Grid.Row="2" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Content="W sklepach:"/>
+
+                            <ItemsControl Grid.Row="0" Grid.Column="2" ItemsSource="{Binding Path=AvailableShops}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsEnabled}" Margin="0,0,10,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                        </Grid>
+
+                        <ListView Grid.Row="4" Grid.Column="0" ItemsSource="{Binding ItemsFound}" SelectedItem="{Binding SelectedItem}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <WrapPanel>
@@ -84,12 +111,35 @@
                     </Grid>
                 </GroupBox>
 
+                <GroupBox Grid.Row="2" Grid.Column="0" Header="Twoja oferta" Padding="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ItemsControl Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Path=ItemsFoundById}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding Title}"/>
+                                        <TextBlock Text=" (" />
+                                        <TextBlock Text="{Binding Author}"/>
+                                        <TextBlock Text=") $" />
+                                        <TextBlock Text="{Binding Price}"/>
+                                    </WrapPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
+                        <Button x:Name="GoToBestBuyOffer" Grid.Row="2" Grid.Column="0" Content="Odbierz najlepszą ofertę"
+                                IsEnabled="{Binding IsBestBuyOfferAvailable}" Command="{Binding GoToBestBuyOfferCommand}"/>
 
+                    </Grid>
+                </GroupBox>
             </Grid>
         </ScrollViewer>
 
     </DockPanel>
-
 
 </Window>

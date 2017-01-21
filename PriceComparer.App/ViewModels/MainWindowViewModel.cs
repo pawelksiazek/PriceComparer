@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using PriceComparer.App.Commands;
+using PriceComparer.BusinessLayer.Comparers;
 using PriceComparer.BusinessLayer.Interfaces;
 using PriceComparer.BusinessLayer.Models;
 using PriceComparer.BusinessLayer.Providers;
@@ -20,11 +22,24 @@ namespace PriceComparer.App.ViewModels
 
         private readonly IComparerSettingsProvider<Book> _comparerSettingsProvider;
         private readonly ISearchProvider _searchProvider;
+        private readonly IItemsComparer _itemsComparer;
 
         public MainWindowViewModel()
         {
             _comparerSettingsProvider = ComparerSettingsProvider<Book>.Instance;
             _searchProvider = new SearchProvider();
+            _itemsComparer = new ItemsComparer();
+
+            GetAvailableShops();
+        }
+
+        private void GetAvailableShops()
+        {
+            AvailableShops = new ObservableCollection<Shop<Book>>();
+            foreach (var shop in _comparerSettingsProvider.ComparerSettings.AvailableShops)
+            {
+                AvailableShops.Add(shop);
+            }
         }
 
         public Dictionary<int, string> AvailableCategories => _comparerSettingsProvider.AvailableCategories;
@@ -48,35 +63,71 @@ namespace PriceComparer.App.ViewModels
 
         public bool IsProductNameProvided => ProductNameToSearch != null;
 
-        #region SearchProductByNameCommand
+        public ObservableCollection<Shop<Book>> AvailableShops { get; set; }
 
-        private ICommand _searchProductByNameCommand;
-        public ICommand SearchProductByNameCommand
+        #region SearchItemByNameCommand
+
+        private ICommand _searchItemByNameCommand;
+        public ICommand SearchItemByNameCommand
         {
             get
             {
-                return _searchProductByNameCommand ?? (_searchProductByNameCommand = new CommandHandler(() => SearchProductByName(), _canExecuteSearchProductCommand));
+                return _searchItemByNameCommand ?? (_searchItemByNameCommand = new CommandHandler(() => SearchItemByName(), _canExecuteSearchItemCommand));
             }
         }
-        private bool _canExecuteSearchProductCommand = true;
+        private bool _canExecuteSearchItemCommand = true;
 
-        public void SearchProductByName() => ProductsFound = _searchProvider.SearchItemsByName(ProductNameToSearch);
+        public void SearchItemByName() => ItemsFound = _searchProvider.SearchItemsByName(ProductNameToSearch);
 
         #endregion
 
 
-        private List<Book> _productsFound;
+        private List<Book> _itemsFound;
 
-        public List<Book> ProductsFound
+        public List<Book> ItemsFound
         {
-            get { return _productsFound; }
+            get { return _itemsFound; }
             set
             {
-                _productsFound = value;
+                _itemsFound = value;
                 OnPropertyChanged();
             }
         }
 
-        public string SelectedProduct { get; set; }
+        private Book _selectedItem;
+
+        public Book SelectedItem
+        {
+            get { return _selectedItem; }
+            set
+            {
+                _selectedItem = value;
+                ItemsFoundById = _searchProvider.GetItemsById(_selectedItem.Isbn);
+                if (ItemsFoundById.Count > 1)
+                {
+                    BestBuyItem = (Book)_itemsComparer.GetCheapestItem(new List<Product>(ItemsFoundById));
+                }
+                else
+                {
+                    BestBuyItem = ItemsFound.First();
+                }
+            }
+        }
+
+        public List<Book> ItemsFoundById { get; set; }
+
+        private Book _bestBuyItem;
+        public Book BestBuyItem
+        {
+            get { return _bestBuyItem; }
+            set
+            {
+                _bestBuyItem = value;
+                OnPropertyChanged(nameof(IsBestBuyOfferAvailable));
+            }
+        }
+
+        public bool IsBestBuyOfferAvailable => BestBuyItem != null;
+
     }
 }

@@ -5,13 +5,13 @@ using PriceComparer.BusinessLayer.Models;
 
 namespace PriceComparer.BusinessLayer.Comparers
 {
-    public class ProductComparer : IProductComparer
+    public class ItemsComparer : IItemsComparer
     {
-        public Product GetCheapestProduct(List<Product> products)
+        public Product GetCheapestItem(List<Product> items)
         {
-            var cheapestProduct = products.First();
+            var cheapestProduct = items.First();
 
-            foreach (var product in products)
+            foreach (var product in items)
             {
                 if (product.Price < cheapestProduct.Price)
                 {

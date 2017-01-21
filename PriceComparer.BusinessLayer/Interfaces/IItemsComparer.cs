@@ -3,8 +3,8 @@ using PriceComparer.BusinessLayer.Models;
 
 namespace PriceComparer.BusinessLayer.Interfaces
 {
-    public interface IProductComparer
+    public interface IItemsComparer
     {
-        Product GetCheapestProduct(List<Product> products);
+        Product GetCheapestItem(List<Product> items);
     }
 }
