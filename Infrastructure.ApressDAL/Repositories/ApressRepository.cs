@@ -24,7 +24,7 @@ namespace Infrastructure.ApressDAL.Repositories
 
             try
             {
-                using (WebClient client = new WebClient())
+                using (var client = new WebClient())
                 {
                     htmlCode = client.DownloadString(url);
                 }
@@ -34,11 +34,6 @@ namespace Infrastructure.ApressDAL.Repositories
                 Console.WriteLine(e);
             }
 
-            Dictionary<string, string> apressItem = new Dictionary<string, string>
-            {
-                { "Url", url}
-            };
-
             T itemFound = null;
 
             if (htmlCode != null)
@@ -46,14 +41,20 @@ namespace Infrastructure.ApressDAL.Repositories
                 var document = new HtmlDocument();
                 document.LoadHtml(htmlCode);
 
-                var rows = document.DocumentNode.SelectNodes("//span[@class='price-box']/span[@class='price']");
+                var apressItem = new Dictionary<string, string>();
+                apressItem["Url"] = url;
 
-                if (rows != null)
-                {
-                    Func<Dictionary<string, string>, T> buildBusinessItemFromApressItem = new T().BuildBusinessItemFromApressItem;
-                    apressItem["Price"] = rows.First().InnerText;
-                    itemFound = buildBusinessItemFromApressItem(apressItem);
-                }
+                var author = document.DocumentNode.SelectNodes("//*[@id=\"content\"]/div[2]/div[1]/div[1]/div[1]/div[2]/p/strong");
+                if (author != null) apressItem["Author"] = author.First().InnerText;
+
+                var title = document.DocumentNode.SelectNodes("//*[@id=\"content\"]/div[2]/div[1]/div[1]/div[1]/div[2]/h1");
+                if (title != null) apressItem["Title"] = title.First().InnerText;
+
+                var price = document.DocumentNode.SelectNodes("//*[@id=\"content\"]/div[2]/div[2]/div[1]/div/dl/dt[2]/span[2]/span"); //"//span[@class='price-box']/span[@class='price']"
+                if (price != null) apressItem["Price"] = price.First().InnerText;
+
+                Func<Dictionary<string, string>, T> buildBusinessItemFromApressItem = new T().BuildBusinessItemFromApressItem;
+                itemFound = buildBusinessItemFromApressItem(apressItem);
             }
 
             return itemFound;

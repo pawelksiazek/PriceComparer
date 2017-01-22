@@ -9,11 +9,11 @@ namespace PriceComparer.BusinessLayer.Comparers
     {
         public T GetCheapestItem(List<T> items)
         {
-            var cheapestItem = items.First();
+            var cheapestItem = items.First(item => item.Price != null);
 
             foreach (var product in items)
             {
-                if (product.Price < cheapestItem.Price)
+                if (product.Price != null && (product.Price < cheapestItem.Price))
                 {
                     cheapestItem = product;
                 }
