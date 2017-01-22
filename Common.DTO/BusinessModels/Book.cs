@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Common.DTO.AmazonModels;
 
 namespace Common.DTO.BusinessModels
@@ -22,8 +23,8 @@ namespace Common.DTO.BusinessModels
             book.Isbn = item.ItemAttributes.ISBN;
             book.Ean = item.ItemAttributes.EAN;
 
-            if (item.ItemAttributes.ListPrice != null)
-                book.Price = decimal.Parse(item.ItemAttributes.ListPrice.FormattedPrice, NumberStyles.Currency, CultureInfo.CreateSpecificCulture("en-US"));
+            if (item.Offers?.Offer?.First().OfferListing?.First().Price != null)
+                book.Price = decimal.Parse(item.Offers.Offer.First().OfferListing.First().Price.FormattedPrice, NumberStyles.Currency, CultureInfo.CreateSpecificCulture("en-US"));
 
             return book;
         }

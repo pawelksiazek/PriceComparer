@@ -46,6 +46,9 @@
     <Compile Include="AmazonModels\ItemLookupResponse.cs" />
     <Compile Include="AmazonModels\Items.cs" />
     <Compile Include="AmazonModels\ItemSearchResponse.cs" />
+    <Compile Include="AmazonModels\Offer.cs" />
+    <Compile Include="AmazonModels\OfferListing.cs" />
+    <Compile Include="AmazonModels\Offers.cs" />
     <Compile Include="AmazonModels\OfferSummary.cs" />
     <Compile Include="AmazonModels\Price.cs" />
     <Compile Include="BusinessModels\Book.cs" />

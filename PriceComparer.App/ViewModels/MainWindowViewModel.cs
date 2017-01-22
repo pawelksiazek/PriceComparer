@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 using Common.DTO.BusinessModels;
 using PriceComparer.App.Commands;
@@ -84,7 +83,7 @@ namespace PriceComparer.App.ViewModels
             ItemsFound = _searchProvider.SearchItemsByName(ProductNameToSearch);
             SelectedItem = null;
             ItemsFoundById = null;
-            BestBuyItem = null;
+            BestBuyItems = null;
         }
 
         #endregion
@@ -112,12 +111,12 @@ namespace PriceComparer.App.ViewModels
                 {
                     ItemsFoundById = _searchProvider.GetItemsById(_selectedItem.Ean);
                     if (ItemsFoundById != null)
-                        BestBuyItem = ItemsFoundById.Count > 1 ? _itemsComparer.GetCheapestItem(ItemsFoundById) : ItemsFoundById.First();
+                        BestBuyItems = ItemsFoundById.Count > 1 ? _itemsComparer.GetCheapestItems(ItemsFoundById) : ItemsFoundById;
                 }
                 else
                 {
                     ItemsFoundById = null;
-                    BestBuyItem = null;
+                    BestBuyItems = null;
                 }
             }
         }
@@ -133,19 +132,19 @@ namespace PriceComparer.App.ViewModels
             }
         }
 
-        private Book _bestBuyItem;
-        public Book BestBuyItem
+        private List<Book> _bestBuyItems;
+        public List<Book> BestBuyItems
         {
-            get { return _bestBuyItem; }
+            get { return _bestBuyItems; }
             set
             {
-                _bestBuyItem = value;
+                _bestBuyItems = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsBestBuyOfferAvailable));
             }
         }
 
-        public bool IsBestBuyOfferAvailable => BestBuyItem != null;
+        public bool IsBestBuyOfferAvailable => BestBuyItems != null;
 
 
         #region GoToBestBuyOfferCommand
@@ -162,7 +161,10 @@ namespace PriceComparer.App.ViewModels
 
         public void GoToBestBuyOffer()
         {
-            System.Diagnostics.Process.Start(BestBuyItem.Url);
+            foreach (var bestBuyItem in BestBuyItems)
+            {
+                System.Diagnostics.Process.Start(bestBuyItem.Url);
+            }
         }
 
         #endregion

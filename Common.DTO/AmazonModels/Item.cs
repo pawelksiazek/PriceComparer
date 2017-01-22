@@ -9,5 +9,6 @@ namespace Common.DTO.AmazonModels
         public string DetailPageURL { get; set; }
         public ItemAttributes ItemAttributes { get; set; }
         public OfferSummary OfferSummary { get; set; }
+        public Offers Offers { get; set; }
     }
 }

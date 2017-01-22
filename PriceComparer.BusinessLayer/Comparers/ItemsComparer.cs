@@ -7,18 +7,31 @@ namespace PriceComparer.BusinessLayer.Comparers
 {
     public class ItemsComparer<T> : IItemsComparer<T> where T : Item<T>
     {
-        public T GetCheapestItem(List<T> items)
+        public List<T> GetCheapestItems(List<T> items)
         {
-            var cheapestItem = items.First(item => item.Price != null);
+            List<T> cheapestItems = null;
 
-            foreach (var product in items)
+            foreach (var item in items)
             {
-                if (product.Price != null && (product.Price < cheapestItem.Price))
+                if (item.Price != null)
                 {
-                    cheapestItem = product;
+                    if (cheapestItems == null)
+                    {
+                        cheapestItems = new List<T> { item };
+                        continue;
+                    }
+
+                    if (item.Price < cheapestItems.First().Price)
+                    {
+                        cheapestItems = new List<T> { item };
+                    }
+                    else if (item.Price == cheapestItems.First().Price)
+                    {
+                        cheapestItems.Add(item);
+                    }
                 }
             }
-            return cheapestItem;
+            return cheapestItems;
         }
     }
 }

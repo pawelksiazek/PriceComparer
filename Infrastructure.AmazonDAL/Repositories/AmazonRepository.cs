@@ -35,7 +35,7 @@ namespace Infrastructure.AmazonDAL.Repositories
             requestData["Operation"] = "ItemSearch";
             requestData["SearchIndex"] = "Books";
             requestData["Keywords"] = itemName;
-            requestData["ResponseGroup"] = "ItemAttributes";
+            requestData["ResponseGroup"] = "ItemAttributes,Offers";
 
             var requestUrl = requestUrlProvider.Sign(requestData);
             var searchResponse = _restRequestService.Get<ItemSearchResponse>(requestUrl, Namespace);
@@ -60,7 +60,7 @@ namespace Infrastructure.AmazonDAL.Repositories
             requestData["AssociateTag"] = "momenthoughts-20";
             requestData["Operation"] = "ItemLookup";
             requestData["SearchIndex"] = "Books";
-            requestData["IdType"] = "EAN"; // ASIN
+            requestData["IdType"] = "EAN";
             requestData["ItemId"] = itemId;
             requestData["ResponseGroup"] = "ItemAttributes,Offers";
 
