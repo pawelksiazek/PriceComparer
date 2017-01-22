@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Xml;
+using System.Linq;
 using Common.DTO.AmazonModels;
+using Common.DTO.BusinessModels;
 using Infrastructure.AmazonDAL.Services;
 using Infrastructure.Common.Interfaces;
 using Infrastructure.Common.Services;
 
 namespace Infrastructure.AmazonDAL.Repositories
 {
-    public class AmazonRepository<T> : IItemsRepository<T>
+    public class AmazonRepository<T> : IItemsRepository<T> where T : Item<T>, new()
     {
-        private readonly IRestRequestService _restRequestService;
+        private readonly RestRequestService _restRequestService;
 
         private const string MyAwsAccessKeyId = "AKIAICTYQILKZ6BXY5JQ"; //"YOUR_AWS_ACCESS_KEY_ID";
         private const string MyAwsSecretKey = "W4QdgzSPcqzu2x26Deg2hEIhqS7V2p3bzlzXSWVR"; //"YOUR_AWS_SECRET_KEY";
         private const string Destination = "ecs.amazonaws.com";
 
-        private const string Namespace = "http://webservices.amazon.com/AWSECommerceService/2009-03-31";
+        private const string Namespace = "http://webservices.amazon.com/AWSECommerceService/2011-08-01";
 
         public AmazonRepository()
         {
@@ -26,30 +26,38 @@ namespace Infrastructure.AmazonDAL.Repositories
 
         public List<T> SearchItemsByName(string itemName)
         {
-            SignedRequestProvider requestUrlProvider = new SignedRequestProvider(MyAwsAccessKeyId, MyAwsSecretKey, Destination);
+            var requestUrlProvider = new SignedRequestProvider(MyAwsAccessKeyId, MyAwsSecretKey, Destination);
 
             IDictionary<string, string> requestData = new Dictionary<string, string>();
             requestData["Service"] = "AWSECommerceService";
             requestData["Version"] = "2011-08-01";
+            requestData["AssociateTag"] = "momenthoughts-20";
             requestData["Operation"] = "ItemSearch";
             requestData["SearchIndex"] = "Books";
             requestData["Keywords"] = itemName;
             requestData["ResponseGroup"] = "ItemAttributes";
 
             var requestUrl = requestUrlProvider.Sign(requestData);
+            var searchResponse = _restRequestService.Get<ItemSearchResponse>(requestUrl, Namespace);
 
-            var items = _restRequestService.Get<ItemSearchResponse>(requestUrl);
+            Func<Item, T> buildItemFromAmazonItem = new T().BuildItemFromAmazonItem;
+            var itemsFound = new List<T>();
 
-            return items;
+            if (searchResponse.Items.First().Item != null)
+            {
+                itemsFound = searchResponse.Items.First().Item.Select(amazonItem => buildItemFromAmazonItem(amazonItem)).ToList();
+            }
+            return itemsFound;
         }
 
-        public T GetItemById(int itemId)
+        public T GetItemById(string itemId)
         {
-            SignedRequestProvider requestUrlProvider = new SignedRequestProvider(MyAwsAccessKeyId, MyAwsSecretKey, Destination);
+            var requestUrlProvider = new SignedRequestProvider(MyAwsAccessKeyId, MyAwsSecretKey, Destination);
 
             IDictionary<string, string> requestData = new Dictionary<string, string>();
             requestData["Service"] = "AWSECommerceService";
             requestData["Version"] = "2011-08-01";
+            requestData["AssociateTag"] = "momenthoughts-20";
             requestData["Operation"] = "ItemLookup";
             requestData["SearchIndex"] = "Books";
             requestData["IdType"] = "ISBN"; // ASIN
@@ -57,43 +65,17 @@ namespace Infrastructure.AmazonDAL.Repositories
             requestData["ResponseGroup"] = "ItemAttributes,Offers";
 
             var requestUrl = requestUrlProvider.Sign(requestData);
-
             //var title = FetchTitle(requestUrl);
-            var item = _restRequestService.Get<ItemLookupResponse>(requestUrl);
-            return item;
+            var lookupResponse = _restRequestService.Get<ItemLookupResponse>(requestUrl);
 
-        }
+            Func<Item, T> buildItemFromAmazonItem = new T().BuildItemFromAmazonItem;
+            T itemFound = null;
 
-
-
-
-        private static string FetchTitle(string url)
-        {
-            try
+            if (lookupResponse != null)
             {
-                WebRequest request = HttpWebRequest.Create(url);
-                WebResponse response = request.GetResponse();
-                XmlDocument doc = new XmlDocument();
-                doc.Load(response.GetResponseStream());
-
-                XmlNodeList errorMessageNodes = doc.GetElementsByTagName("Message", Namespace);
-                if (errorMessageNodes != null && errorMessageNodes.Count > 0)
-                {
-                    String message = errorMessageNodes.Item(0).InnerText;
-                    return "Error: " + message + " (but signature worked)";
-                }
-
-                XmlNode titleNode = doc.GetElementsByTagName("Title", Namespace).Item(0);
-                string title = titleNode.InnerText;
-                return title;
+                itemFound = buildItemFromAmazonItem(lookupResponse.Items.First());
             }
-            catch (Exception e)
-            {
-                System.Console.WriteLine("Caught Exception: " + e.Message);
-                System.Console.WriteLine("Stack Trace: " + e.StackTrace);
-            }
-
-            return null;
+            return itemFound;
         }
     }
 }

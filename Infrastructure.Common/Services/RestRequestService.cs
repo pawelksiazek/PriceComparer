@@ -1,62 +1,30 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Infrastructure.Common.Interfaces;
+using System.Xml.Serialization;
 
 namespace Infrastructure.Common.Services
 {
-    public class RestRequestService : IRestRequestService
+    public class RestRequestService
     {
-        private readonly HttpClient _restClient;
 
-        public RestRequestService()
+        public T Get<T>(string url, string namespce = null)
         {
-            _restClient = GetHttpClient();
-        }
-
-        private HttpClient GetHttpClient()
-        {
-            HttpClient host = new HttpClient();
-            //host.BaseAddress = new Uri(_ebokConfiguration.WebApiUrl);
-
-            host.DefaultRequestHeaders.Accept.Clear();
-            host.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            return host;
-        }
-
-        //public T Get<T>(string url)
-        //{
-        //    var response = _restClient.GetAsync(url).Result;
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        var result = response.Content.ReadAsAsync<T>().Result;
-        //        return result;
-        //    }
-
-        //    throw new Exception(string.Format("{0} {1} {2}", (int)response.StatusCode, response.ReasonPhrase, url));
-        //}
-
-        public T Get<T>(string url)
-        {
-            HttpClient host = new HttpClient();
-            //host.BaseAddress = new Uri(_ebokConfiguration.WebApiUrl);
-
-            host.DefaultRequestHeaders.Accept.Clear();
-            host.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            HttpClient restClient = host;
-
-            var response = restClient.GetAsync(url).Result;
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var result = response.Content.ReadAsAsync<T>().Result;
+                WebRequest request = HttpWebRequest.Create(url);
+                WebResponse response = request.GetResponse();
+
+                var xmlSerializer = new XmlSerializer(typeof(T), namespce);
+                var result = (T)xmlSerializer.Deserialize(response.GetResponseStream());
                 return result;
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("Caught Exception: " + e.Message);
+                Console.WriteLine("Stack Trace: " + e.StackTrace);
+            }
 
-            throw new Exception(string.Format("{0} {1} {2}", (int)response.StatusCode, response.ReasonPhrase, url));
+            return default(T);
         }
     }
 }

@@ -52,6 +52,10 @@
       <Project>{e526aa3b-1950-4bf1-907c-9af36ff9b4b6}</Project>
       <Name>Common.DTO</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.Common\Infrastructure.Common.csproj">
+      <Project>{14C9F41A-3555-42A9-AB82-23BD82D219F2}</Project>
+      <Name>Infrastructure.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

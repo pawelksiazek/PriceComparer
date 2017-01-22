@@ -6,6 +6,6 @@ namespace PriceComparer.BusinessLayer.Interfaces
     public interface ISearchProvider
     {
         List<Book> SearchItemsByName(string itemName);
-        List<Book> GetItemsById(int itemId);
+        List<Book> GetItemsById(string itemId);
     }
 }

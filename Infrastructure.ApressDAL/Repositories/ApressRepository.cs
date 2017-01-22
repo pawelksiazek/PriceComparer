@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure.Common.Interfaces;
 
 namespace Infrastructure.ApressDAL.Repositories
 {
-    class ApressRepository
+    public class ApressRepository<T> : IItemsRepository<T>
     {
 
         //var homePageRequest = new RestRequest("https://secure.getinbank.pl/accounts/", Method.GET);
@@ -28,5 +29,14 @@ namespace Infrastructure.ApressDAL.Repositories
 
         //}
 
+        public List<T> SearchItemsByName(string itemName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T GetItemById(string itemId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

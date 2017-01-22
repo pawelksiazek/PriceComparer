@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,9 +44,10 @@
     <Compile Include="AmazonModels\Item.cs" />
     <Compile Include="AmazonModels\ItemAttributes.cs" />
     <Compile Include="AmazonModels\ItemLookupResponse.cs" />
+    <Compile Include="AmazonModels\Items.cs" />
     <Compile Include="AmazonModels\ItemSearchResponse.cs" />
-    <Compile Include="AmazonModels\LowestNewPrice.cs" />
     <Compile Include="AmazonModels\OfferSummary.cs" />
+    <Compile Include="AmazonModels\Price.cs" />
     <Compile Include="BusinessModels\Book.cs" />
     <Compile Include="BusinessModels\Item.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

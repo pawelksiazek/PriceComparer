@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Xml.Serialization;
 
 namespace Common.DTO.AmazonModels
 {
     public class ItemSearchResponse
     {
-        public List<Item> Items { get; set; }
+        [XmlElement("Items")]
+        public Items[] Items { get; set; }
     }
 }

@@ -21,19 +21,19 @@ namespace PriceComparer.BusinessLayer.Providers
 
             foreach (var shop in _comparerSettingsProvider.ComparerSettings.AvailableShops)
             {
-                itemsFound.AddRange(shop.ItemsRepository.SearchItemsByName(itemName));
+                if (shop.IsEnabled) itemsFound.AddRange(shop.ItemsRepository.SearchItemsByName(itemName));
             }
 
             return itemsFound;
         }
 
-        public List<Book> GetItemsById(int itemId)
+        public List<Book> GetItemsById(string itemId)
         {
             var itemsFound = new List<Book>();
 
             foreach (var shop in _comparerSettingsProvider.ComparerSettings.AvailableShops)
             {
-                itemsFound.Add(shop.ItemsRepository.GetItemById(itemId));
+                if (shop.IsEnabled) itemsFound.Add(shop.ItemsRepository.GetItemById(itemId));
             }
 
             return itemsFound;

@@ -79,13 +79,17 @@ namespace PriceComparer.App.ViewModels
         }
         private bool _canExecuteSearchItemCommand = true;
 
-        public void SearchItemByName() => ItemsFound = _searchProvider.SearchItemsByName(ProductNameToSearch);
+        public void SearchItemByName()
+        {
+            ItemsFound = _searchProvider.SearchItemsByName(ProductNameToSearch);
+            SelectedItem = null;
+            BestBuyItem = null;
+        }
 
         #endregion
 
 
         private List<Book> _itemsFound;
-
         public List<Book> ItemsFound
         {
             get { return _itemsFound; }
@@ -97,21 +101,16 @@ namespace PriceComparer.App.ViewModels
         }
 
         private Book _selectedItem;
-
         public Book SelectedItem
         {
             get { return _selectedItem; }
             set
             {
                 _selectedItem = value;
-                ItemsFoundById = _searchProvider.GetItemsById(_selectedItem.Isbn);
-                if (ItemsFoundById.Count > 1)
+                if (_selectedItem?.Isbn != null)
                 {
-                    BestBuyItem = _itemsComparer.GetCheapestItem(ItemsFoundById);
-                }
-                else
-                {
-                    BestBuyItem = ItemsFound.First();
+                    ItemsFoundById = _searchProvider.GetItemsById(_selectedItem.Isbn);
+                    BestBuyItem = ItemsFoundById.Count > 1 ? _itemsComparer.GetCheapestItem(ItemsFoundById) : ItemsFound.First();
                 }
             }
         }

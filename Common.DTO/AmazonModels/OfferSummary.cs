@@ -2,6 +2,6 @@
 {
     public class OfferSummary
     {
-        public LowestNewPrice LowestNewPrice { get; set; }
+        public Price LowestNewPrice { get; set; }
     }
 }

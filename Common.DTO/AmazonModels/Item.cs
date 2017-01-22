@@ -1,4 +1,7 @@
-﻿namespace Common.DTO.AmazonModels
+﻿using System.Runtime.Serialization;
+using System.Xml.Serialization;
+
+namespace Common.DTO.AmazonModels
 {
     public class Item
     {

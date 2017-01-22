@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:PriceComparer.App.ViewModels"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Porównywarka cen" Height="450" Width="525" MinHeight="450" MinWidth="525"
+        Title="Porównywarka cen" Height="600" Width="500" MinHeight="600" MinWidth="500"
         WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <viewModels:MainWindowViewModel/>
@@ -45,7 +45,7 @@
                             <RowDefinition Height="10"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="10"/>
-                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="200"/>
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0" Grid.Column="0">
