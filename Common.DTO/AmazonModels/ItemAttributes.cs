@@ -8,6 +8,7 @@ namespace Common.DTO.AmazonModels
         public string Author { get; set; }
         public string Title { get; set; }
         public string ISBN { get; set; }
+        public string EAN { get; set; }
         public Price ListPrice { get; set; }
     }
 }

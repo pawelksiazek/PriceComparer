@@ -39,7 +39,7 @@ namespace PriceComparer.BusinessLayer.Settings
                 AvailableShops = new List<Shop<T>>
                 {
                     new Shop<T>("Amazon", new AmazonRepository<T>(), true),
-                    new Shop<T>("Apress", new ApressRepository<T>(), false)
+                    new Shop<T>("Apress", new ApressRepository<T>(), true)
                 }
             };
         }

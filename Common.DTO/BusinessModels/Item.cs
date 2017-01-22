@@ -1,4 +1,5 @@
-﻿using Common.DTO.AmazonModels;
+﻿using System.Collections.Generic;
+using Common.DTO.AmazonModels;
 
 namespace Common.DTO.BusinessModels
 {
@@ -7,6 +8,7 @@ namespace Common.DTO.BusinessModels
         public decimal? Price { get; set; }
         public string Url { get; set; }
 
-        public abstract T BuildItemFromAmazonItem(Item item);
+        public abstract T BuildBusinessItemFromAmazonItem(Item item);
+        public abstract T BuildBusinessItemFromApressItem(Dictionary<string, string> item);
     }
 }

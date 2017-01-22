@@ -33,7 +33,11 @@ namespace PriceComparer.BusinessLayer.Providers
 
             foreach (var shop in _comparerSettingsProvider.ComparerSettings.AvailableShops)
             {
-                if (shop.IsEnabled) itemsFound.Add(shop.ItemsRepository.GetItemById(itemId));
+                if (shop.IsEnabled)
+                {
+                    var item = shop.ItemsRepository.GetItemById(itemId);
+                    if (item != null) itemsFound.Add(item);
+                }
             }
 
             return itemsFound;

@@ -40,7 +40,7 @@ namespace Infrastructure.AmazonDAL.Repositories
             var requestUrl = requestUrlProvider.Sign(requestData);
             var searchResponse = _restRequestService.Get<ItemSearchResponse>(requestUrl, Namespace);
 
-            Func<Item, T> buildItemFromAmazonItem = new T().BuildItemFromAmazonItem;
+            Func<Item, T> buildItemFromAmazonItem = new T().BuildBusinessItemFromAmazonItem;
             var itemsFound = new List<T>();
 
             if (searchResponse.Items.First().Item != null)
@@ -60,19 +60,19 @@ namespace Infrastructure.AmazonDAL.Repositories
             requestData["AssociateTag"] = "momenthoughts-20";
             requestData["Operation"] = "ItemLookup";
             requestData["SearchIndex"] = "Books";
-            requestData["IdType"] = "ISBN"; // ASIN
+            requestData["IdType"] = "EAN"; // ASIN
             requestData["ItemId"] = itemId;
             requestData["ResponseGroup"] = "ItemAttributes,Offers";
 
             var requestUrl = requestUrlProvider.Sign(requestData);
             var lookupResponse = _restRequestService.Get<ItemLookupResponse>(requestUrl, Namespace);
 
-            Func<Item, T> buildItemFromAmazonItem = new T().BuildItemFromAmazonItem;
+            Func<Item, T> buildBusinessItemFromAmazonItem = new T().BuildBusinessItemFromAmazonItem;
             T itemFound = null;
 
             if (lookupResponse != null)
             {
-                itemFound = buildItemFromAmazonItem(lookupResponse.Items.First());
+                itemFound = buildBusinessItemFromAmazonItem(lookupResponse.Items.First());
             }
             return itemFound;
         }

@@ -108,9 +108,9 @@ namespace PriceComparer.App.ViewModels
             set
             {
                 _selectedItem = value;
-                if (_selectedItem?.Isbn != null && _selectedItem.Price != null)
+                if (_selectedItem?.Ean != null && _selectedItem.Price != null)
                 {
-                    ItemsFoundById = _searchProvider.GetItemsById(_selectedItem.Isbn);
+                    ItemsFoundById = _searchProvider.GetItemsById(_selectedItem.Ean);
                     if (ItemsFoundById != null)
                         BestBuyItem = ItemsFoundById.Count > 1 ? _itemsComparer.GetCheapestItem(ItemsFoundById) : ItemsFoundById.First();
                 }
