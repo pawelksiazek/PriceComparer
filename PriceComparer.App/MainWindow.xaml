@@ -32,9 +32,8 @@
         <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto">
             <Grid Margin="15">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="20"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
@@ -45,7 +44,7 @@
                             <RowDefinition Height="10"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="10"/>
-                            <RowDefinition Height="200"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0" Grid.Column="0">
@@ -96,7 +95,7 @@
 
                         </Grid>
 
-                        <ListView Grid.Row="4" Grid.Column="0" ItemsSource="{Binding ItemsFound}" SelectedItem="{Binding SelectedItem}">
+                        <ListView Grid.Row="4" Grid.Column="0" ItemsSource="{Binding ItemsFound}" SelectedItem="{Binding SelectedItem}" MinHeight="100">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <WrapPanel>
@@ -126,7 +125,7 @@
                                         <TextBlock Text=" (" />
                                         <TextBlock Text="{Binding Author}"/>
                                         <TextBlock Text=") $" />
-                                        <TextBlock Text="{Binding Price}"/>
+                                        <TextBlock Text="{Binding Price}" FontWeight="Bold"/>
                                     </WrapPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

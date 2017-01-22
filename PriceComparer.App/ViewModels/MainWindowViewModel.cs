@@ -83,6 +83,7 @@ namespace PriceComparer.App.ViewModels
         {
             ItemsFound = _searchProvider.SearchItemsByName(ProductNameToSearch);
             SelectedItem = null;
+            ItemsFoundById = null;
             BestBuyItem = null;
         }
 
@@ -107,15 +108,30 @@ namespace PriceComparer.App.ViewModels
             set
             {
                 _selectedItem = value;
-                if (_selectedItem?.Isbn != null)
+                if (_selectedItem?.Isbn != null && _selectedItem.Price != null)
                 {
                     ItemsFoundById = _searchProvider.GetItemsById(_selectedItem.Isbn);
-                    BestBuyItem = ItemsFoundById.Count > 1 ? _itemsComparer.GetCheapestItem(ItemsFoundById) : ItemsFound.First();
+                    if (ItemsFoundById != null)
+                        BestBuyItem = ItemsFoundById.Count > 1 ? _itemsComparer.GetCheapestItem(ItemsFoundById) : ItemsFoundById.First();
+                }
+                else
+                {
+                    ItemsFoundById = null;
+                    BestBuyItem = null;
                 }
             }
         }
 
-        public List<Book> ItemsFoundById { get; set; }
+        private List<Book> _itemsFoundById;
+        public List<Book> ItemsFoundById
+        {
+            get { return _itemsFoundById; }
+            set
+            {
+                _itemsFoundById = value;
+                OnPropertyChanged();
+            }
+        }
 
         private Book _bestBuyItem;
         public Book BestBuyItem
@@ -124,11 +140,31 @@ namespace PriceComparer.App.ViewModels
             set
             {
                 _bestBuyItem = value;
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(IsBestBuyOfferAvailable));
             }
         }
 
         public bool IsBestBuyOfferAvailable => BestBuyItem != null;
 
+
+        #region GoToBestBuyOfferCommand
+
+        private ICommand _goToBestBuyOfferCommand;
+        public ICommand GoToBestBuyOfferCommand
+        {
+            get
+            {
+                return _goToBestBuyOfferCommand ?? (_goToBestBuyOfferCommand = new CommandHandler(() => GoToBestBuyOffer(), _canExecuteGoToBestBuyOfferCommand));
+            }
+        }
+        private bool _canExecuteGoToBestBuyOfferCommand = true;
+
+        public void GoToBestBuyOffer()
+        {
+            System.Diagnostics.Process.Start(BestBuyItem.Url);
+        }
+
+        #endregion
     }
 }

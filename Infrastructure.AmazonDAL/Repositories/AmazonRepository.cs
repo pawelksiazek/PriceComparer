@@ -13,8 +13,8 @@ namespace Infrastructure.AmazonDAL.Repositories
     {
         private readonly RestRequestService _restRequestService;
 
-        private const string MyAwsAccessKeyId = "AKIAICTYQILKZ6BXY5JQ"; //"YOUR_AWS_ACCESS_KEY_ID";
-        private const string MyAwsSecretKey = "W4QdgzSPcqzu2x26Deg2hEIhqS7V2p3bzlzXSWVR"; //"YOUR_AWS_SECRET_KEY";
+        private const string MyAwsAccessKeyId = "AKIAICTYQILKZ6BXY5JQ";
+        private const string MyAwsSecretKey = "W4QdgzSPcqzu2x26Deg2hEIhqS7V2p3bzlzXSWVR";
         private const string Destination = "ecs.amazonaws.com";
 
         private const string Namespace = "http://webservices.amazon.com/AWSECommerceService/2011-08-01";
@@ -61,12 +61,11 @@ namespace Infrastructure.AmazonDAL.Repositories
             requestData["Operation"] = "ItemLookup";
             requestData["SearchIndex"] = "Books";
             requestData["IdType"] = "ISBN"; // ASIN
-            requestData["ItemId"] = itemId.ToString();
+            requestData["ItemId"] = itemId;
             requestData["ResponseGroup"] = "ItemAttributes,Offers";
 
             var requestUrl = requestUrlProvider.Sign(requestData);
-            //var title = FetchTitle(requestUrl);
-            var lookupResponse = _restRequestService.Get<ItemLookupResponse>(requestUrl);
+            var lookupResponse = _restRequestService.Get<ItemLookupResponse>(requestUrl, Namespace);
 
             Func<Item, T> buildItemFromAmazonItem = new T().BuildItemFromAmazonItem;
             T itemFound = null;
